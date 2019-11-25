@@ -33,6 +33,7 @@ router.post('/register', (req,res)=>{
 })
 
 router.post('/login', (req,res)=>{
+	console.log('req ',req)
 	let {username, password } = req.body
 	console.log(username, password)
 
