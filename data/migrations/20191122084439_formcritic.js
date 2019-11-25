@@ -38,6 +38,7 @@ exports.up = function(knex) {
   })
   .createTable('posts', tbl=>{
     tbl.increments()
+    tbl.string('title', 126).notNullable()
     tbl.string('description', 255).notNullable()
     tbl.string('video_link', 126).notNullable()
     tbl.integer('exercise_id').notNullable()
