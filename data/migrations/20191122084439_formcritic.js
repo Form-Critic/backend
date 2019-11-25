@@ -8,6 +8,7 @@ exports.up = function(knex) {
       tbl.string('email', 255).notNullable().unique()
       tbl.string('password', 126).notNullable()
       tbl.integer('post_count').notNullable().default(0)
+      tbl.binary('avatar').default('https://i.stack.imgur.com/IHLNO.jpg') 
   })
   .createTable('messages', tbl=>{ // message system
     tbl.increments()
@@ -29,7 +30,7 @@ exports.up = function(knex) {
     tbl.string('body', 255)
   })
   .createTable('exercises', tbl=>{
-      tbl.increments()
+    tbl.increments()
     tbl.string('name',126).notNullable()
     tbl.string('body_category',126).notNullable()
     tbl.string('video_link',126)
@@ -41,7 +42,7 @@ exports.up = function(knex) {
     tbl.string('video_link', 126).notNullable()
     tbl.integer('exercise_id').notNullable()
     .references('id')
-    .inTable('exercise')
+    .inTable('exercises')
     .onDelete('CASCADE')
     .onUpdate('CASCADE')
     .unsigned()

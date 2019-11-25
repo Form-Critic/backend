@@ -9,13 +9,12 @@ module.exports = {
 }
 
 async function add(user){
-    const id = await db('users').insert(user).select('id').returning('id')
-    console.log('this is id', id)
-    return getById(id[0])
+    const id = await db('users').insert(user).select('id').returning('id')// returns id in array
+    return findBy({id:id[0]}).returning('*')
 } 
 
 function getById(id){
-    return db('users').where({id:id}).returning('*')
+    return db('users').where({id:id}).select('*').returning('*')
 }
 
 function findBy(user){
