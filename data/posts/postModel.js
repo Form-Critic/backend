@@ -5,11 +5,14 @@ module.exports = {
     getAll,
     getById,
     update,
-    remove
+    remove,
+    getCompletePost
 }
 
-function add(post){
-    return db('posts').insert(post).select('*').returning('*')
+async function add(post){
+    const newPostId = await db('posts').insert(post).select('*').returning('*')
+    console.log(newPostId[0])
+    return getCompletePost(newPostId[0])
 }
 
 function getAll(){
@@ -31,9 +34,19 @@ function getById(id){
 }
 
 async function remove(id){
-    const deletedPost = await getById(id)
+    console.log(id)
+    const deletedPost = await getById({id:id})
     await db('posts').where({id:id}).del()
     return deletedPost
 } 
 
+function getCompletePost(id){
+    return db('posts as p')
+    .join('users as u', 'u.id', 'p.user_id')
+    .join('exercises as e', 'e.id', 'p.exercise_id')
+    .where({'p.id':id})
+    .select('u.username', 'u.avatar', 'u.name','p.*', 'e.name as exercise')
+    // .select('p.*')
+    .returning('u.username', 'u.avatar', 'u.name','p.*', 'e.name as exercise')
+}
 // function remove
