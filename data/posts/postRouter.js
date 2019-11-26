@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const postDB = require('./postModel')
+const commentsDB = require('../post_comments/postCommentModel')
 const restricted = require('../auth/restricted-middleware')
 
 router.get('/', (req,res)=>{
@@ -73,14 +74,78 @@ router.delete('/:id', restricted, isUser, (req,res)=>{
     })
 })
 
+// for comments below here
+
+router.get('/:id/comments', (req,res)=>{
+    const post_id = req.params.id
+    console.log(post_id)
+    commentsDB.getById(post_id)
+    .then(comment=>{
+        res.status(200).json(comment)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+router.post('/:id/comments', restricted, (req,res)=>{
+    const post_id = req.params.id
+    const user_id = req.decodedJwt.sub
+    const body = req.body
+    console.log(post_id)
+    commentsDB.add({post_id:post_id, user_id:user_id, ...body})
+    .then(comment=>{
+        res.status(200).json(...comment)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+router.put('/:post_id/comments/:id', restricted, isUserComment, (req, res)=>{
+    const commentID = {id:req.params.id}
+    const comment = req.body
+    commentsDB.update(commentID, req.body)
+    .then(updated=>{
+        console.log(updated)
+        res.status(200).json(...updated)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
+router.delete('/:post_id/comments/:id', restricted, isUserComment, (req,res)=>{
+    commentsDB.remove(id)
+    .then(deletedComment=>{
+        console.log(deletedComment)
+        res.status(200).json(...deletedComment)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
+
 //middleware
 
 async function isUser(req, res, next){
     const postId = req.params
     const postInfo = await postDB.getById(postId)
-    // console.log(req.decodedJwt.sub, postInfo[0].user_id)
+
     return(!postInfo[0])?res.status(400).json({err:"That post does not exist"}):
     (req.decodedJwt.sub===postInfo[0].user_id)?next():res.status(404).json({err:"This is not yours!"})
+}
+
+async function isUserComment(req, res, next){
+    const commentId = req.params.id
+    const commentInfo = await commentsDB.getByCommentId(commentId)
+
+    return(!commentInfo[0])?res.status(400).json({err:"That comment does not exist"}):
+    (req.decodedJwt.sub===commentInfo[0].user_id)?next():res.status(404).json({err:"This is not yours!"})
 }
 
 module.exports = router

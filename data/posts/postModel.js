@@ -19,21 +19,23 @@ function getAll(){
     //for the grid view!!
     return db('posts as p')
     .join('exercises as e', 'p.exercise_id', 'e.id')
-    .select('p.title', 'e.name','p.video_link', 'p.up_vote', 'p.down_vote').returning('title')
+    .select('p.id', 'p.title', 'e.name','p.video_link', 'p.up_vote', 'p.down_vote').returning('title')
 }
 
 async function update(id, post){
-    
+    //id is obj, post is obj
     const updated = await db('posts').update(post).where(id).select('*').returning('*')
     //returns obj in list
     return updated? getById(id) : 0
 }
 
 function getById(id){
+    //id is obj
     return db('posts').where(id).select('*').returning('*')
 }
 
 async function remove(id){
+    //id is int
     console.log(id)
     const deletedPost = await getById({id:id})
     await db('posts').where({id:id}).del()
@@ -41,6 +43,7 @@ async function remove(id){
 } 
 
 function getCompletePost(id){
+    //id is int
     return db('posts as p')
     .join('users as u', 'u.id', 'p.user_id')
     .join('exercises as e', 'e.id', 'p.exercise_id')
