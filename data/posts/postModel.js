@@ -13,15 +13,21 @@ function add(post){
 }
 
 function getAll(){
-    return db('posts').select('title').returning('title')
+    //for the grid view!!
+    return db('posts as p')
+    .join('exercises as e', 'p.exercise_id', 'e.id')
+    .select('p.title', 'e.name','p.video_link', 'p.up_vote', 'p.down_vote').returning('title')
 }
 
-function update(id, post){
-    return db('posts').update(post).where(id).select('*').returning('*')
+async function update(id, post){
+    
+    const updated = await db('posts').update(post).where(id).select('*').returning('*')
+    //returns obj in list
+    return updated? getById(id) : 0
 }
 
 function getById(id){
-    return db('posts').where({id:id}).select('*').returning('*')
+    return db('posts').where(id).select('*').returning('*')
 }
 
 async function remove(id){
