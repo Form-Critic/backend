@@ -5,7 +5,8 @@ module.exports = {
     getConversation,
     getByUser,
     sendReply,
-    getUsersConversations
+    getUsersConversations,
+    viewUserConversation
 }
 
 async function send(id, body){
@@ -50,4 +51,9 @@ function getUsersConversations(id){
     // .leftJoin('message_conversation as mc', 'm.id', 'mc.message_id')
     .where({user_one: id}).orWhere({user_two: id}).select('m.*', 'u.name','u2.name as other_user').returning('m.*', 'u.name','u2.name')
 
+}
+
+function viewUserConversation(id){
+    //where id is the message id
+    return db('message_conversation').where({message_id:id}).orderBy('date','asc').select('*').returning('*')
 }

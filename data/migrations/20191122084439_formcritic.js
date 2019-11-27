@@ -44,8 +44,7 @@ exports.up = function(knex) {
     .unsigned()
     .notNullable()
     tbl.string('body', 255)
-    tbl.date('post_date').notNullable().default(new Date())
-    
+    tbl.timestamp('date').notNullable().defaultTo(knex.fn.now())    
   })
   .createTable('exercises', tbl=>{
     tbl.increments()

@@ -46,7 +46,18 @@ router.get('/', restricted, (req,res)=>{
     })
 })
 
-router.get('')
+router.get('/:id', (req,res)=>{
+    const message_id = req.params.id
+    messageDB.viewUserConversation(message_id)
+    .then(message=>{
+        console.log(message)
+        res.status(200).json(message)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
 
 
 //middleware may not be necessary 
