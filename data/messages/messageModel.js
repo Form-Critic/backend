@@ -42,16 +42,12 @@ async function sendReply(body){
     return getById(reply_id[0])
 }
 
-function getUsersConversations(){
+function getUsersConversations(id){
+    //work on incorporating message_conversation 
     return db('messages as m')
-    .join('users as u', 'm.user_id', 'u.id')
-    .where({user_one: user_id}).orWhere({user_two: other_id}).select('m.*, u.name').returning('m.*, u.name')
+    .join('users as u', 'm.user_one', 'u.id')
+    .join('users as u2', 'm.user_two', 'u2.id')
+    // .leftJoin('message_conversation as mc', 'm.id', 'mc.message_id')
+    .where({user_one: id}).orWhere({user_two: id}).select('m.*', 'u.name','u2.name as other_user').returning('m.*', 'u.name','u2.name')
 
 }
-
-
-// async function getFullConversation(id){
-//     //id belongs to user_two
-//     constgetConversation(user_id, other_id)
-
-// }

@@ -33,9 +33,21 @@ router.post('/:message_id', restricted, (req,res)=>{
 
 })
 
-router.get('/', restricted, (req,res)=>[
+router.get('/', restricted, (req,res)=>{
+    //front end needs to organize this information
+    const user_id = req.decodedJwt.sub
+    messageDB.getUsersConversations(user_id)
+    .then(conversations=>{
+        res.status(200).json(conversations)
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json(err)
+    })
+})
 
-])
+router.get('')
+
 
 //middleware may not be necessary 
 async function conversationExists(req,res,next){
