@@ -19,7 +19,9 @@ function getAll(){
     //for the grid view!!
     return db('posts as p')
     .join('exercises as e', 'p.exercise_id', 'e.id')
-    .select('p.id', 'p.title', 'e.name','p.video_link', 'p.up_vote', 'p.down_vote').returning('title')
+    .join('users as u', 'u.id', 'p.user_id')
+    .select('u.name as user', 'u.avatar','p.id', 'p.title', 'p.description','e.name','p.video_link', 'p.date', 'p.up_vote', 'p.down_vote')
+    .returning('u.name as user', 'u.avatar','p.id', 'p.title', 'p.description','e.name','p.video_link', 'p.date', 'p.up_vote', 'p.down_vote')
 }
 
 async function update(id, post){

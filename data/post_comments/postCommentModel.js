@@ -17,7 +17,12 @@ async function add(comment){
 
 function getById(id){
     //id is int
-    return db('post_comments').where({post_id:id}).select('*').returning('*')
+    return db('post_comments as pc')
+    .join('users as u', 'u.id','pc.user_id')
+    .where({'pc.post_id': id})
+    .select('pc.*', 'u.name', 'u.username', 'u.avatar')
+    .returning('pc.*', 'u.name', 'u.username', 'u.avatar')
+    //.where({post_id:id}).select('*').returning('*')
 }
 
 function getAll(){
@@ -44,5 +49,9 @@ async function remove(id){
 
 function getByCommentId(id){
     //id is int
-    return db('post_comments').where({id:id}).select('*').returning('*')
+    return db('post_comments as pc')
+    .join('users as u', 'u.id','pc.user_id')
+    .where({'pc.id': id})
+    .select('pc.*', 'u.name', 'u.username', 'u.avatar')
+    .returning('pc.*', 'u.name', 'u.username', 'u.avatar')
 }

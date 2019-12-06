@@ -6,6 +6,7 @@ const authRouter = require('../data/auth/authRouter')
 const postRouter = require('../data/posts/postRouter')
 const messageRouter = require('../data/messages/messageRouter')
 
+server.use(cors())
 server.use(express.json())
 
 server.use('/api/users', authRouter)

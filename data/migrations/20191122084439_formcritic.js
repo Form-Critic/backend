@@ -74,6 +74,7 @@ exports.up = function(knex) {
     .notNullable()
     tbl.integer('up_vote').notNullable().default(0)
     tbl.integer('down_vote').notNullable().default(0)
+    tbl.timestamp('date').notNullable().defaultTo(knex.fn.now())
   })
   .createTable('post_comments', tbl=>{
       tbl.increments()
@@ -94,7 +95,9 @@ exports.up = function(knex) {
       .notNullable()
       tbl.integer('up_vote').notNullable().default(0)
       tbl.integer('down_vote').notNullable().default(0)
-  })
+      tbl.timestamp('date').notNullable().defaultTo(knex.fn.now())
+
+    })
 };
 
 exports.down = function(knex) {
