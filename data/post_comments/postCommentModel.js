@@ -41,9 +41,9 @@ async function update(id, comment){
 
 async function remove(id){
     //id is int
-    console.log(id)
-    const deletedPost = await getByCommentId(id)
-    await db('post_comments').where({id:id}).del()
+    console.log('look here',id)
+    const deletedPost = await getByCommentId(id.id)
+    await db('post_comments').where(id).del()
     return deletedPost
 } 
 
