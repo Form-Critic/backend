@@ -118,7 +118,7 @@ router.put('/:post_id/comments/:id', restricted, isUserComment, (req, res)=>{
     })
 })
 
-router.delete('/:post_id/comments/:id', restricted, isUserComment, (req,res)=>{
+router.delete('/comments/:id', restricted, isUserComment, (req,res)=>{
     const commentID = {id:req.params.id} 
     commentsDB.remove(commentID)
     .then(deletedComment=>{
