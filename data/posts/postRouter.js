@@ -15,6 +15,17 @@ router.get('/', (req,res)=>{
     })
 })
 
+router.get('/:id/all', restricted, (req,res)=>{
+    const id = req.params.id
+    console.log('this is the id I need, ' ,id)
+    postDB.getByUserId(id)
+    .then(myPosts=>res.status(200).json(myPosts))
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json({err:'something went wrong'})
+    })
+})
+
 router.get('/:id', restricted,(req,res)=>{
 
     console.log('this needs to show up', req.decodedJwt)
@@ -149,4 +160,4 @@ async function isUserComment(req, res, next){
     (req.decodedJwt.sub===commentInfo[0].user_id)?next():res.status(404).json({err:"This is not yours!"})
 }
 
-module.exports = router
+module.exports = router 

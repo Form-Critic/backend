@@ -6,7 +6,9 @@ module.exports = {
     getById,
     update,
     remove,
-    getCompletePost
+    getCompletePost,
+    getByUserId
+
 }
 
 async function add(post){
@@ -29,6 +31,10 @@ async function update(id, post){
     const updated = await db('posts').update(post).where(id).select('*').returning('*')
     //returns obj in list
     return updated? getById(id) : 0
+}
+
+function getByUserId(userId){
+    return  db('posts').where({user_id:userId}).select('*').returning('*')
 }
 
 function getById(id){

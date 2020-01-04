@@ -16,8 +16,5 @@ server.use('/api/posts', postRouter)
 server.use('/api/messages', messageRouter)
 server.use('/api/user', userRouter)
 
-// server.use('/',(req,res)=>{
-//     res.send('<h1>The Server Is Up And Running</h1>')
-// })
 
 module.exports = server
